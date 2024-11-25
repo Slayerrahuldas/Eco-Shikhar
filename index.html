@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Excel Dashboard</h1>
+
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+            <input type="text" id="search-bar" placeholder="Search by HUL Code or Outlet Name">
+        </div>
+
+        <!-- Filters for columns 4-7 using dropdowns -->
+        <div class="filters-container">
+            <select id="filter-deets-me-name">
+                <option value="">DETS ME Name</option>
+            </select>
+            <select id="filter-deets-beat">
+                <option value="">DETS Beat</option>
+            </select>
+            <select id="filter-fnr-me-name">
+                <option value="">FnR ME Name</option>
+            </select>
+            <select id="filter-fnr-beat">
+                <option value="">FnR Beat</option>
+            </select>
+        </div>
+
+        <!-- Buttons for filtering -->
+        <div class="buttons-container">
+            <button id="filter-button-1">ECO < 1000</button>
+            <button id="filter-button-2">Shikhar < 500</button>
+            <button id="reset-button">Reset Filters</button>
+        </div>
+
+        <!-- Table -->
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>HUL Code</th>
+                    <th>HUL Outlet Name</th>
+                    <th>Shikhar Onboarding</th>
+                    <th>DETS ME Name</th>
+                    <th>DETS Beat</th>
+                    <th>FnR ME Name</th>
+                    <th>FnR Beat</th>
+                    <th>ECO</th>
+                    <th>Shikhar</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Data will be populated here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Link to the script -->
+    <script src="Script.js"></script>
+</body>
+</html>
