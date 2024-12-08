@@ -45,19 +45,30 @@ function populateFilters() {
         if (row["FnR Beat"]) fnrBeats.add(row["FnR Beat"]);
     });
 
-    populateSelectDropdown("filter-deets-me-name", detsMeNames);
-    populateSelectDropdown("filter-deets-beat", detsBeats);
-    populateSelectDropdown("filter-fnr-me-name", fnrMeNames);
-    populateSelectDropdown("filter-fnr-beat", fnrBeats);
+    populateSelectDropdown("filter-deets-me-name", detsMeNames, "DETS ME Name");
+    populateSelectDropdown("filter-deets-beat", detsBeats, "DETS Beat");
+    populateSelectDropdown("filter-fnr-me-name", fnrMeNames, "FnR ME Name");
+    populateSelectDropdown("filter-fnr-beat", fnrBeats, "FnR Beat");
 }
 
 // Function to populate dropdown options
-function populateSelectDropdown(id, optionsSet) {
+function populateSelectDropdown(id, optionsSet, columnName) {
     const dropdown = document.getElementById(id);
-    dropdown.innerHTML = '<option value="">All</option>'; // Add a default 'All' option
+    dropdown.innerHTML = ""; // Clear existing options
+
+    // Add the column name as the default option
+    const defaultOption = document.createElement("option");
+    defaultOption.textContent = columnName; // Use column name as the placeholder
+    defaultOption.value = ""; // Set empty value to ignore this selection in filters
+    defaultOption.disabled = true; // Make it unselectable
+    defaultOption.selected = true; // Make it the default selected option
+    dropdown.appendChild(defaultOption);
+
+    // Populate other options
     optionsSet.forEach((option) => {
         const optionElement = document.createElement("option");
         optionElement.textContent = option;
+        optionElement.value = option;
         dropdown.appendChild(optionElement);
     });
 }
