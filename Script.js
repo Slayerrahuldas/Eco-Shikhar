@@ -56,18 +56,13 @@ function populateSelectDropdown(id, optionsSet, columnName) {
     const dropdown = document.getElementById(id);
     dropdown.innerHTML = ""; // Clear existing options
 
-    // Add the column name as the default option (placeholder)
+    // Add the column name as the default option
     const defaultOption = document.createElement("option");
     defaultOption.textContent = columnName; // Use column name as the placeholder
     defaultOption.value = ""; // Set empty value to ignore this selection in filters
-    defaultOption.disabled = false; // Allow it to act as "All"
+    defaultOption.disabled = false; // Allow selection for "All"
+    defaultOption.selected = true; // Make it the default selected option
     dropdown.appendChild(defaultOption);
-
-    // Add the "All" option explicitly
-    const allOption = document.createElement("option");
-    allOption.textContent = "All";
-    allOption.value = "ALL"; // Special value to indicate "All"
-    dropdown.appendChild(allOption);
 
     // Populate other options
     optionsSet.forEach((option) => {
@@ -76,8 +71,6 @@ function populateSelectDropdown(id, optionsSet, columnName) {
         optionElement.value = option;
         dropdown.appendChild(optionElement);
     });
-
-    dropdown.selectedIndex = 0; // Ensure column name appears as default
 }
 
 // Function to apply all filters and update the table
@@ -101,16 +94,16 @@ function applyFilters() {
     const filterFnrMeName = document.getElementById("filter-fnr-me-name").value;
     const filterFnrBeat = document.getElementById("filter-fnr-beat").value;
 
-    if (filterDetsMeName !== "ALL" && filterDetsMeName !== "") {
+    if (filterDetsMeName !== "") {
         filteredData = filteredData.filter((row) => row["DETS ME Name"] === filterDetsMeName);
     }
-    if (filterDetsBeat !== "ALL" && filterDetsBeat !== "") {
+    if (filterDetsBeat !== "") {
         filteredData = filteredData.filter((row) => row["DETS Beat"] === filterDetsBeat);
     }
-    if (filterFnrMeName !== "ALL" && filterFnrMeName !== "") {
+    if (filterFnrMeName !== "") {
         filteredData = filteredData.filter((row) => row["FnR ME Name"] === filterFnrMeName);
     }
-    if (filterFnrBeat !== "ALL" && filterFnrBeat !== "") {
+    if (filterFnrBeat !== "") {
         filteredData = filteredData.filter((row) => row["FnR Beat"] === filterFnrBeat);
     }
 
