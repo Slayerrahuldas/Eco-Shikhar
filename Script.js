@@ -56,11 +56,12 @@ function populateSelectDropdown(id, optionsSet, columnName) {
     const dropdown = document.getElementById(id);
     dropdown.innerHTML = ""; // Clear existing options
 
-    // Add column name as the first option
-    const columnOption = document.createElement("option");
-    columnOption.textContent = columnName;
-    columnOption.value = ""; // Placeholder value for the column name
-    dropdown.appendChild(columnOption);
+    // Add the column name as the default option (placeholder)
+    const defaultOption = document.createElement("option");
+    defaultOption.textContent = columnName; // Use column name as the placeholder
+    defaultOption.value = ""; // Set empty value to ignore this selection in filters
+    defaultOption.disabled = false; // Allow it to act as "All"
+    dropdown.appendChild(defaultOption);
 
     // Add the "All" option explicitly
     const allOption = document.createElement("option");
@@ -75,6 +76,8 @@ function populateSelectDropdown(id, optionsSet, columnName) {
         optionElement.value = option;
         dropdown.appendChild(optionElement);
     });
+
+    dropdown.selectedIndex = 0; // Ensure column name appears as default
 }
 
 // Function to apply all filters and update the table
