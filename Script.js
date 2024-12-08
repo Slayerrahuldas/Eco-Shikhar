@@ -60,7 +60,7 @@ function populateSelectDropdown(id, optionsSet, columnName) {
     const defaultOption = document.createElement("option");
     defaultOption.textContent = columnName; // Use column name as the placeholder
     defaultOption.value = ""; // Set empty value to ignore this selection in filters
-    defaultOption.disabled = true; // Make it unselectable
+    defaultOption.disabled = false; // Allow selection for "All"
     defaultOption.selected = true; // Make it the default selected option
     dropdown.appendChild(defaultOption);
 
@@ -94,16 +94,16 @@ function applyFilters() {
     const filterFnrMeName = document.getElementById("filter-fnr-me-name").value;
     const filterFnrBeat = document.getElementById("filter-fnr-beat").value;
 
-    if (filterDetsMeName) {
+    if (filterDetsMeName !== "") {
         filteredData = filteredData.filter((row) => row["DETS ME Name"] === filterDetsMeName);
     }
-    if (filterDetsBeat) {
+    if (filterDetsBeat !== "") {
         filteredData = filteredData.filter((row) => row["DETS Beat"] === filterDetsBeat);
     }
-    if (filterFnrMeName) {
+    if (filterFnrMeName !== "") {
         filteredData = filteredData.filter((row) => row["FnR ME Name"] === filterFnrMeName);
     }
-    if (filterFnrBeat) {
+    if (filterFnrBeat !== "") {
         filteredData = filteredData.filter((row) => row["FnR Beat"] === filterFnrBeat);
     }
 
@@ -120,6 +120,27 @@ function applyFilters() {
     // Update the table with the filtered data
     populateTable(filteredData);
 }
+
+// Reset button functionality
+document.getElementById("reset-button").addEventListener("click", () => {
+    // Reset filter button states
+    filterButton1Active = false;
+    filterButton2Active = false;
+    document.getElementById("filter-button-1").style.backgroundColor = "blue";
+    document.getElementById("filter-button-2").style.backgroundColor = "blue";
+
+    // Reset search bar
+    document.getElementById("search-bar").value = "";
+
+    // Reset dropdown filters to default
+    document.getElementById("filter-deets-me-name").selectedIndex = 0;
+    document.getElementById("filter-deets-beat").selectedIndex = 0;
+    document.getElementById("filter-fnr-me-name").selectedIndex = 0;
+    document.getElementById("filter-fnr-beat").selectedIndex = 0;
+
+    // Reapply filters to show the unfiltered data
+    applyFilters();
+});
 
 // Event listeners for dropdowns and search bar
 document.getElementById("search-bar").addEventListener("input", applyFilters);
@@ -139,15 +160,6 @@ document.getElementById("filter-button-2").addEventListener("click", () => {
     filterButton2Active = !filterButton2Active;
     document.getElementById("filter-button-2").style.backgroundColor = filterButton2Active ? "green" : "blue";
     applyFilters(); // Reapply all filters
-});
-
-// Reset button functionality (only resets the filter buttons)
-document.getElementById("reset-button").addEventListener("click", () => {
-    filterButton1Active = false;
-    filterButton2Active = false;
-    document.getElementById("filter-button-1").style.backgroundColor = "blue";
-    document.getElementById("filter-button-2").style.backgroundColor = "blue";
-    applyFilters(); // Reapply all filters without the button filters
 });
 
 // Initialize the table and filters
