@@ -45,24 +45,22 @@ function populateFilters() {
         if (row["FnR Beat"]) fnrBeats.add(row["FnR Beat"]);
     });
 
-    populateSelectDropdown("filter-deets-me-name", detsMeNames, "DETS ME Name");
-    populateSelectDropdown("filter-deets-beat", detsBeats, "DETS Beat");
-    populateSelectDropdown("filter-fnr-me-name", fnrMeNames, "FnR ME Name");
-    populateSelectDropdown("filter-fnr-beat", fnrBeats, "FnR Beat");
+    populateSelectDropdown("filter-deets-me-name", detsMeNames, "Select DETS ME Name");
+    populateSelectDropdown("filter-deets-beat", detsBeats, "Select DETS Beat");
+    populateSelectDropdown("filter-fnr-me-name", fnrMeNames, "Select FnR ME Name");
+    populateSelectDropdown("filter-fnr-beat", fnrBeats, "Select FnR Beat");
 }
 
 // Function to populate dropdown options
-function populateSelectDropdown(id, optionsSet, columnName) {
+function populateSelectDropdown(id, optionsSet, placeholderText) {
     const dropdown = document.getElementById(id);
     dropdown.innerHTML = ""; // Clear existing options
 
-    // Add the column name as the default option
-    const defaultOption = document.createElement("option");
-    defaultOption.textContent = columnName; // Use column name as the placeholder
-    defaultOption.value = ""; // Set empty value to ignore this selection in filters
-    defaultOption.disabled = false; // Allow selection for "All"
-    defaultOption.selected = true; // Make it the default selected option
-    dropdown.appendChild(defaultOption);
+    // Add the "All" option explicitly
+    const allOption = document.createElement("option");
+    allOption.textContent = "All";
+    allOption.value = "ALL"; // Special value to indicate "All"
+    dropdown.appendChild(allOption);
 
     // Populate other options
     optionsSet.forEach((option) => {
@@ -71,6 +69,13 @@ function populateSelectDropdown(id, optionsSet, columnName) {
         optionElement.value = option;
         dropdown.appendChild(optionElement);
     });
+
+    // Set the placeholder
+    dropdown.setAttribute("placeholder", placeholderText);
+    dropdown.insertAdjacentHTML(
+        "beforebegin",
+        `<option value="" disabled selected hidden>${placeholderText}</option>`
+    );
 }
 
 // Function to apply all filters and update the table
@@ -94,16 +99,16 @@ function applyFilters() {
     const filterFnrMeName = document.getElementById("filter-fnr-me-name").value;
     const filterFnrBeat = document.getElementById("filter-fnr-beat").value;
 
-    if (filterDetsMeName !== "") {
+    if (filterDetsMeName !== "ALL" && filterDetsMeName !== "") {
         filteredData = filteredData.filter((row) => row["DETS ME Name"] === filterDetsMeName);
     }
-    if (filterDetsBeat !== "") {
+    if (filterDetsBeat !== "ALL" && filterDetsBeat !== "") {
         filteredData = filteredData.filter((row) => row["DETS Beat"] === filterDetsBeat);
     }
-    if (filterFnrMeName !== "") {
+    if (filterFnrMeName !== "ALL" && filterFnrMeName !== "") {
         filteredData = filteredData.filter((row) => row["FnR ME Name"] === filterFnrMeName);
     }
-    if (filterFnrBeat !== "") {
+    if (filterFnrBeat !== "ALL" && filterFnrBeat !== "") {
         filteredData = filteredData.filter((row) => row["FnR Beat"] === filterFnrBeat);
     }
 
