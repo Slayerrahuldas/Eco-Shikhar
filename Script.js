@@ -45,16 +45,22 @@ function populateFilters() {
         if (row["FnR Beat"]) fnrBeats.add(row["FnR Beat"]);
     });
 
-    populateSelectDropdown("filter-deets-me-name", detsMeNames, "Select DETS ME Name");
-    populateSelectDropdown("filter-deets-beat", detsBeats, "Select DETS Beat");
-    populateSelectDropdown("filter-fnr-me-name", fnrMeNames, "Select FnR ME Name");
-    populateSelectDropdown("filter-fnr-beat", fnrBeats, "Select FnR Beat");
+    populateSelectDropdown("filter-deets-me-name", detsMeNames, "DETS ME Name");
+    populateSelectDropdown("filter-deets-beat", detsBeats, "DETS Beat");
+    populateSelectDropdown("filter-fnr-me-name", fnrMeNames, "FnR ME Name");
+    populateSelectDropdown("filter-fnr-beat", fnrBeats, "FnR Beat");
 }
 
 // Function to populate dropdown options
-function populateSelectDropdown(id, optionsSet, placeholderText) {
+function populateSelectDropdown(id, optionsSet, columnName) {
     const dropdown = document.getElementById(id);
     dropdown.innerHTML = ""; // Clear existing options
+
+    // Add column name as the first option
+    const columnOption = document.createElement("option");
+    columnOption.textContent = columnName;
+    columnOption.value = ""; // Placeholder value for the column name
+    dropdown.appendChild(columnOption);
 
     // Add the "All" option explicitly
     const allOption = document.createElement("option");
@@ -69,13 +75,6 @@ function populateSelectDropdown(id, optionsSet, placeholderText) {
         optionElement.value = option;
         dropdown.appendChild(optionElement);
     });
-
-    // Set the placeholder
-    dropdown.setAttribute("placeholder", placeholderText);
-    dropdown.insertAdjacentHTML(
-        "beforebegin",
-        `<option value="" disabled selected hidden>${placeholderText}</option>`
-    );
 }
 
 // Function to apply all filters and update the table
