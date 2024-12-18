@@ -31,69 +31,17 @@ function populateTable(data) {
     });
 }
 
-// Function to populate dropdown filters
-function populateFilters() {
-    const detsMeNames = new Set();
-    const detsBeats = new Set();
-    const fnrMeNames = new Set();
-    const fnrBeats = new Set();
-
-    jsonData.forEach((row) => {
-        if (row["DETS ME Name"]) detsMeNames.add(row["DETS ME Name"]);
-        if (row["DETS Beat"]) detsBeats.add(row["DETS Beat"]);
-        if (row["FnR ME Name"]) fnrMeNames.add(row["FnR ME Name"]);
-        if (row["FnR Beat"]) fnrBeats.add(row["FnR Beat"]);
-    });
-
-    populateSelectDropdown("filter-deets-me-name", detsMeNames, "DETS ME Name");
-    populateSelectDropdown("filter-deets-beat", detsBeats, "DETS Beat");
-    populateSelectDropdown("filter-fnr-me-name", fnrMeNames, "FnR ME Name");
-    populateSelectDropdown("filter-fnr-beat", fnrBeats, "FnR Beat");
-}
-
-// Function to populate dropdown options
-function populateSelectDropdown(id, optionsSet, columnName) {
-    const dropdown = document.getElementById(id);
-    dropdown.innerHTML = ""; // Clear existing options
-
-    // Add the column name as the default option
-    const defaultOption = document.createElement("option");
-    defaultOption.textContent = columnName; // Use column name as the placeholder
-    defaultOption.value = ""; // Set empty value to ignore this selection in filters
-    defaultOption.disabled = false; // Allow selection for "All"
-    defaultOption.selected = true; // Make it the default selected option
-    dropdown.appendChild(defaultOption);
-
-    // Populate other options
-    optionsSet.forEach((option) => {
-        const optionElement = document.createElement("option");
-        optionElement.textContent = option;
-        optionElement.value = option;
-        dropdown.appendChild(optionElement);
-    });
-}
-
-// Function to apply all filters and update the table
+// Function to apply all filters and update the table and dropdowns
 function applyFilters() {
     let filteredData = [...jsonData]; // Start with the original data
 
-    // Search Bar Filter
-    const searchQuery = document.getElementById("search-bar").value.toLowerCase();
-    if (searchQuery) {
-        filteredData = filteredData.filter((row) => {
-            return (
-                row["HUL Code"].toLowerCase().includes(searchQuery) ||
-                row["HUL Outlet Name"].toLowerCase().includes(searchQuery)
-            );
-        });
-    }
-
-    // Dropdown Filters
+    // Get dropdown filter values
     const filterDetsMeName = document.getElementById("filter-deets-me-name").value;
     const filterDetsBeat = document.getElementById("filter-deets-beat").value;
     const filterFnrMeName = document.getElementById("filter-fnr-me-name").value;
     const filterFnrBeat = document.getElementById("filter-fnr-beat").value;
 
+    // Apply dropdown filters
     if (filterDetsMeName !== "") {
         filteredData = filteredData.filter((row) => row["DETS ME Name"] === filterDetsMeName);
     }
@@ -105,6 +53,17 @@ function applyFilters() {
     }
     if (filterFnrBeat !== "") {
         filteredData = filteredData.filter((row) => row["FnR Beat"] === filterFnrBeat);
+    }
+
+    // Search Bar Filter
+    const searchQuery = document.getElementById("search-bar").value.toLowerCase();
+    if (searchQuery) {
+        filteredData = filteredData.filter((row) => {
+            return (
+                row["HUL Code"].toLowerCase().includes(searchQuery) ||
+                row["HUL Outlet Name"].toLowerCase().includes(searchQuery)
+            );
+        });
     }
 
     // Filter Button Logic
@@ -119,6 +78,54 @@ function applyFilters() {
 
     // Update the table with the filtered data
     populateTable(filteredData);
+
+    // Dynamically update dropdown options based on filtered data
+    updateDropdowns(filteredData);
+}
+
+// Function to dynamically update dropdown options
+function updateDropdowns(filteredData) {
+    const detsMeNames = new Set();
+    const detsBeats = new Set();
+    const fnrMeNames = new Set();
+    const fnrBeats = new Set();
+
+    // Collect unique options from filtered data
+    filteredData.forEach((row) => {
+        if (row["DETS ME Name"]) detsMeNames.add(row["DETS ME Name"]);
+        if (row["DETS Beat"]) detsBeats.add(row["DETS Beat"]);
+        if (row["FnR ME Name"]) fnrMeNames.add(row["FnR ME Name"]);
+        if (row["FnR Beat"]) fnrBeats.add(row["FnR Beat"]);
+    });
+
+    // Repopulate dropdowns with updated options
+    populateSelectDropdown("filter-deets-me-name", detsMeNames, "DETS ME Name");
+    populateSelectDropdown("filter-deets-beat", detsBeats, "DETS Beat");
+    populateSelectDropdown("filter-fnr-me-name", fnrMeNames, "FnR ME Name");
+    populateSelectDropdown("filter-fnr-beat", fnrBeats, "FnR Beat");
+}
+
+// Function to populate dropdown filters
+function populateSelectDropdown(id, optionsSet, columnName) {
+    const dropdown = document.getElementById(id);
+    const selectedValue = dropdown.value; // Keep the current selection
+    dropdown.innerHTML = ""; // Clear existing options
+
+    // Add the column name as the default option
+    const defaultOption = document.createElement("option");
+    defaultOption.textContent = columnName; // Use column name as the placeholder
+    defaultOption.value = ""; // Set empty value to ignore this selection in filters
+    defaultOption.selected = true; // Make it the default selected option
+    dropdown.appendChild(defaultOption);
+
+    // Populate other options
+    optionsSet.forEach((option) => {
+        const optionElement = document.createElement("option");
+        optionElement.textContent = option;
+        optionElement.value = option;
+        if (option === selectedValue) optionElement.selected = true; // Retain previous selection
+        dropdown.appendChild(optionElement);
+    });
 }
 
 // Reset button functionality
@@ -165,7 +172,7 @@ document.getElementById("filter-button-2").addEventListener("click", () => {
 // Initialize the table and filters
 function initialize() {
     populateTable(jsonData);
-    populateFilters();
+    applyFilters(); // Ensure filters are populated based on the data
 }
 
 // Fetch data and initialize the page
